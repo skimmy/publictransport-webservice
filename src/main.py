@@ -1,5 +1,6 @@
 import cherrypy
 import public.PublicTransits as publict
+import os.path
 
 class RootService:
     
@@ -14,7 +15,10 @@ class RootService:
         return "Error locating service";
     
 
-if __name__ == "__main__":    
+if __name__ == "__main__":
+    configFile = "./st.conf"
+    if (os.path.isfile(configFile)):
+        cherrypy.config.update(configFile)
     cherrypy.quickstart(RootService())
 
     
