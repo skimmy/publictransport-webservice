@@ -3,12 +3,16 @@ import public.PublicTransits as publict
 
 class RootService:
     
-    pub = publict.PublicTransit();
+    pub = publict.PublicTransitWS();
     
+    @cherrypy.expose
     def index(self):
         return "Hello from WS"
-    index.exposed = True
-
+    
+    @cherrypy.expose
+    def echo(self, msg):
+        return msg;
+    
 
 if __name__ == "__main__":    
     cherrypy.quickstart(RootService())
