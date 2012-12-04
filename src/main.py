@@ -10,8 +10,8 @@ class RootService:
         return "Hello from WS"
     
     @cherrypy.expose
-    def echo(self, msg):
-        return msg;
+    def default(self):
+        return "Error locating service";
     
 
 if __name__ == "__main__":    
