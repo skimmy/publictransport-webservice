@@ -10,8 +10,13 @@ class ModelBase(object):
     '''
 
 
-    def __init__(self):
+    def __init__(self, tid=0):
         '''
         Constructor
         '''
+        self.id = tid
+        
+    def getId(self):        
+        return self.id
+    
         
