@@ -8,8 +8,16 @@ import base
 
 class Position(object):
     
+    accuracy = 0.0
+    
     def getPosition(self):
         pass
+    
+    def getAccuracy(self):
+        return self.accuracy
+    
+    def setAccuracy(self, acc):
+        self.accuracy = acc
 
 
 class GeoPosition(Position):

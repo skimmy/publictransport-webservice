@@ -16,8 +16,8 @@ class Timetable:
         a stop object with elapsed time from the starting point
     '''
     
-    def __init__(self):
-        self.initial = (datetime.time(), GeoPosition())
+    def __init__(self, initStop, initTime):
+        self.initial = (initTime, initStop)
         self.table = []
         
     def setInitial(self, initialTime, initialPosition):
@@ -32,15 +32,17 @@ class Timetable:
         return toReturn
 
 if __name__ == "__main__":
+    inS = Stop("1200", GeoPosition(11.23, 47.862))
     s = Stop("1234", GeoPosition(11.12, 48.49))
     p = Stop("1235", GeoPosition(11.23, 48.33))
     t = Stop("1200", GeoPosition(11.20, 58.40))
     
+    inT = datetime.time(hour=12, minute=30)
     x = datetime.timedelta(minutes=2)
     y = datetime.timedelta(minutes=5)
     z = datetime.timedelta(minutes=3)
     
-    tt = Timetable()
+    tt = Timetable(inS,inT)
     
     tt.insertItem(x, s)
     tt.insertItem(y, p)
