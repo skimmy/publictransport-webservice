@@ -19,4 +19,7 @@ class ModelBase(object):
     def getId(self):        
         return self.id
     
+    
+    def addInfoToElement(self, elem):
+        elem.set('id', str(self.id))
         

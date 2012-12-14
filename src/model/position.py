@@ -6,6 +6,8 @@ Created on Dec 6, 2012
 
 import base
 
+import xml.etree.ElementTree as ET
+
 class Position(object):
     
     accuracy = 0.0
@@ -41,7 +43,7 @@ class GeoPosition(Position):
         return ("(" + str(round(self.latitude, self.DIGIT_PRECISION)) + ", " + str(round(self.longitude, self.DIGIT_PRECISION)) + ")")
         
     def getPosition(self):
-        return (self.latitude, self.longitude)
+        return (self.latitude, self.longitude)    
     
     def getLatitude(self):
         return self.latitude
@@ -52,6 +54,12 @@ class GeoPosition(Position):
     def setPosition(self, lat, lon):
         self.latitude = lat
         self.longitude = lon
+        
+    def toDict(self):
+        d = {}
+        d["latitude"] = str(self.latitude)
+        d["longitude"] = str(self.longitude)
+        return d
         
 class PositionedItem(base.ModelBase):
     
@@ -64,6 +72,10 @@ class PositionedItem(base.ModelBase):
     
     def setPosition(self, pos):
         self.position = pos
+        
+    def addInfoToElement(self, elem):
+        base.ModelBase.addInfoToElement(self, elem)
+        ET.SubElement(elem, "position", self.position.toDict())
     
     
 if __name__ == "__main__":

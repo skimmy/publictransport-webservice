@@ -1,10 +1,16 @@
 import cherrypy
-import public.PublicTransits as publict
+import public.pubtransits as publict
 import os.path
+
+import model.users as user
 
 class RootService:
     
     pub = publict.PublicTransitWS();
+    
+    def __init__(self):
+        self.u = user.User("user@email.dom")
+        self.u.setName("skimmy")
     
     @cherrypy.expose
     def index(self):
@@ -13,6 +19,10 @@ class RootService:
     @cherrypy.expose
     def default(self):
         return "Error locating service";
+    
+    @cherrypy.expose
+    def users(self):
+        return self.u.toXmlString() 
     
 
 if __name__ == "__main__":
