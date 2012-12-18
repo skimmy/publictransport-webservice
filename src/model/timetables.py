@@ -5,6 +5,7 @@ Created on Dec 6, 2012
 '''
 
 import datetime
+import xml.etree.ElementTree as ET
 
 from stops import Stop
 from position import GeoPosition
@@ -30,6 +31,23 @@ class Timetable:
         toReturn = [self.initial]
         toReturn.extend(sorted(self.table,key=lambda item : item[0]))
         return toReturn
+    
+    def addInfoToElement(self, elem):
+        initialET = ET.SubElement(elem, "initial")
+        dt = self.initial[0]
+        initialET.set('time', "" + str(dt.hour) + ":" + str(dt.minute))        
+        self.initial[1].addInfoToElement(initialET)
+        srt = self.getSortedTimetable()
+        for item in srt[1:len(srt)]:
+            e = ET.SubElement(elem, 'intermediate')
+            item[1].addInfoToElement(e)
+            e.set('deltatime',  str(item[0].seconds))
+                
+    def toXmlString(self):
+        elem = ET.Element('timetable')
+        self.addInfoToElement(elem)
+        return ET.tostring(elem)
+     
 
 if __name__ == "__main__":
     inS = Stop("1200", GeoPosition(11.23, 47.862))
@@ -50,9 +68,10 @@ if __name__ == "__main__":
     
 
     sortedTt = tt.getSortedTimetable()
-    for tti in sortedTt:
-        print(tti)
-        
+#    for tti in sortedTt:
+#        print(tti)
+    
+    print(tt.toXmlString())
     
     
     

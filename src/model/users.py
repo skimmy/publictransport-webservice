@@ -40,6 +40,11 @@ class UserSession(object):
         self.timetable.insertItem(actualtime, pos)
 
 class User(position.PositionedItem):
+    '''
+    A User os positioned item that can move freely. To each user is associated
+    at most one UserSession object that stores information about the actual
+    Session (i.e. time/position items) 
+    '''
       
     def __init__(self, mail):
         if (not reutil.verifyEmail(mail)):
@@ -50,15 +55,46 @@ class User(position.PositionedItem):
         position.PositionedItem.__init__(self, position.GeoPosition() ,uid)
         self.name = ""
         self.session = None
-        
+        self.lastSession = None
+
+# GET AND SET METHODS        
+
     def getName(self):
         return self.name
     
     def setName(self, n):
         self.name = n
         
+# USER MOVEMENT METHODS
+        
     def newPosition(self, pos):
         self.position = pos
+        # if a session is running, insert the position
+        if self.session != None:
+            self.session.addPosition(pos)
+        
+    def startNewSesion(self, pos):
+        '''
+        Starts a new session, a session cannot be started without giving
+        the initial position.
+        '''
+        self.session = UserSession()
+        self.session.start(pos)
+        
+    def stopCurrentSession(self):
+        '''
+        Stops the current session (if running) and store it in the last session
+        variable for further processing
+        '''
+        if self.session != None:
+            self.session.stop()
+            self.lastSession = self.session
+            self.session = None
+        # Call here processing procedure for the just finished session like:
+        # 1. Persist it
+        # ...
+        
+# REPRESENTATION METHODS
         
     def __str__(self):
         output = "" + repr(self.id) + "\n"

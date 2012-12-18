@@ -76,9 +76,22 @@ class PositionedItem(base.ModelBase):
     def addInfoToElement(self, elem):
         base.ModelBase.addInfoToElement(self, elem)
         ET.SubElement(elem, "position", self.position.toDict())
+        
+    def toDictionary(self):
+        d = base.ModelBase.toDictionary(self)
+        d["position"] = self.position
+        return d
+        
+    def toXmlString(self):
+        elem = ET.Element("PositionedItem")
+        self.addInfoToElement(elem)
+        return ET.tostring(elem)
+        
     
     
 if __name__ == "__main__":
     pos = GeoPosition(1.0, -3.0)
-    item = PositionedItem(pos)
-    print(item.getPosition()) 
+    
+    pi = PositionedItem(pos,1234)
+    print(pi.toDictionary())
+    print(pi.toXmlString())
