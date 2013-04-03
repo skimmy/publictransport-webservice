@@ -36,3 +36,6 @@ nosetests.xml
 
 # Application configuration file
 src/st.conf
+
+# CherryPy library (necessary to deployment on GAE)
+src/cherrypy/
