@@ -9,25 +9,20 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 def test():
-    from model import base
-    import gaemodel.base as gaebase
-    b1 = base.ModelBase()
-    b2 = base.ModelBase("pippo")
-    gb1 = gaebase.GAEBaseModel(id = b1.id)
-    gb2 = gaebase.getGAEBaseModel(b2)
-    #gb2 = gaebase.GAEBaseModel(b2.toDictionary())
-    return [gb1.toBaseModel(), gb2.toBaseModel()]
+    import model.position as pos
+    import gaemodel.position as gaepos
+    p1 = pos.PositionedItem(pos.GeoPosition(1.234, 45.999), "sk")
+    gp1 = gaepos.getGAEGeoPositionedItem(p1)
+    return [gp1.toPositionedItem()]
+    
 
 
 class MainPage(webapp.RequestHandler):
 
     def get(self):
         self.response.headers['Content-Type'] = "text/plain"
-        self.response.out.write('<root>')        
-        for b in test():
-            self.response.out.write(b.toXmlString())
-        self.response.out.write('</root>')
-     
+        for p in test():
+            self.response.out.write(p.toXmlString())
     
 Application = webapp.WSGIApplication([('/', MainPage)], debug=True)
     
