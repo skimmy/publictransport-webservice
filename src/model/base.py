@@ -20,7 +20,7 @@ class ModelBase(object):
         id of the object. If the argument is not given, then it is assumed
         to be the integer value zero
         '''
-        self.id = tid
+        self.id = str(tid)
         
     def getId(self):
         return self.id
