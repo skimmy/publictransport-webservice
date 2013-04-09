@@ -15,15 +15,21 @@ def test():
     import gaemodel.timetables as tt
         
     import datetime
-    
-    stop = gaestops.GAEStop(mid="stop1", position=ndb.GeoPt(0.1,8.9))
-    stop.put()    
+    import model.stops as mstops
+    from model import position
+    mstop = mstops.Stop(sid="stop1", pos=position.GeoPosition(lat=44.0, lon=10.9))
+    mstop2 = mstops.Stop(sid="nearby", pos=position.GeoPosition(lat=44.5, lon=11.3))
+    stop = gaestops.getGAEStop(mstop)
+    stop2 = gaestops.getGAEStop(mstop2)
+    # stop = gaestops.GAEStop(mid="stop1", position=ndb.GeoPt(0.1,8.9))
+    stop.put()
+    stop2.put()
     item = tt.TimetableItem(time=datetime.datetime.now(), stop=stop.key)
-    item2 = tt.TimetableItem(time=(datetime.datetime.now() + datetime.timedelta(hours=1)), stop=None)
+    item2 = tt.TimetableItem(time=(datetime.datetime.now() + datetime.timedelta(hours=1)), stop=stop2.key)
     ttable = tt.GAETimetables(initstop=None, inittime=datetime.datetime.now(), table=[item, item2])
-#     ttable.put()
-#     return ttable
-#        
+    ttable.put()
+    return ttable
+        
 
 
 class MainPage(webapp.RequestHandler):
@@ -32,11 +38,13 @@ class MainPage(webapp.RequestHandler):
         ttable = test()
         self.response.headers['Content-Type'] = "text/plain"
         self.response.out.write("Hello!\n")
-#         for i in ttable.table:
-#             s = "None"
-#             if i.stop != None:
-#                 s = gaestops.GAEStop.
-#             self.response.write("Stop: " + s + "\n")
+        for i in ttable.table:
+            s = "None"
+            originalstop = "None"
+            if i.stop != None:
+                s = i.stop.get().mid
+                originalstop = i.stop.get().toStop()
+            self.response.write("Stop: " + str(s) + " - " + str(i.time) + "\n\t" + str(originalstop) + "\n")
     
 Application = webapp.WSGIApplication([('/', MainPage)], debug=True)
     
