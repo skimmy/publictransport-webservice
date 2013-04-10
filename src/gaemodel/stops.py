@@ -10,6 +10,8 @@ import position as gaepos
 import model.position as modelpos
 from model import stops
 
+# TODO: implement getGAEStopById function
+
 def getGAEStop(stop):
     return GAEStop(mid=stop.id, position=ndb.GeoPt(stop.position.latitude,
                                                    stop.position.longitude)) 
