@@ -20,10 +20,10 @@ def testCreateTimetable():
     s = Stop("1234", GeoPosition(11.12, 48.49))
     p = Stop("1235", GeoPosition(11.23, 48.33))
     t = Stop("1202", GeoPosition(11.20, 58.40))
-#     stops.getGAEStop(inS).put()
-#     stops.getGAEStop(s).put()
-#     stops.getGAEStop(p).put()
-#     stops.getGAEStop(t).put()
+    kinS = stops.getGAEStop(inS).put()
+    ks = stops.getGAEStop(s).put()
+    ps = stops.getGAEStop(p).put()
+    ts = stops.getGAEStop(t).put()
     inT = datetime.time(hour=12, minute=30)
     x = datetime.timedelta(minutes=2)
     y = datetime.timedelta(minutes=5)
@@ -32,14 +32,22 @@ def testCreateTimetable():
     tt.insertItem(x, s)
     tt.insertItem(y, p)
     tt.insertItem(z, t)
-    return tt
+    return tt, [kinS, ks, ps, ts], ["1200", "1234", "1235", "1202"]
 
 def test():
     from gaemodel import timetables
-    modeltt = testCreateTimetable()
-    gtt = timetables.getGAETimetable(modeltt)
-    #gtt.put()
-    return(gtt.toTimetable().toXmlString())
+    from gaemodel import stops
+    modeltt, keys, ids = testCreateTimetable()
+    outString = ""
+    for i in ids:
+        outString += str(stops.getGAEStopByModelId(i))
+    for k in keys:
+        outString += str(k.get())
+#     gtt = timetables.getGAETimetable(modeltt)
+#     outString = None
+#     if gtt != None:
+#         outString = gtt.toTimetable().toXmlString() 
+    return(outString)
 
 
 class MainPage(webapp.RequestHandler):

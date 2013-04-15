@@ -20,9 +20,17 @@ def getGAETimetable(timetable):
     modeltable = timetable.table
     for item in modeltable:
         gaestop = stops.getGAEStopByModelId(item[1].id)
-        gaetable.append(TimetableItem(time=item[0].seconds, stop=gaestop.key))
+        if gaestop != None:
+            gaetable.append(TimetableItem(time=item[0].seconds, stop=gaestop.key))
+        else:
+            # TODO: decide what to do when there is no proper gaestop object in the datastore
+            return None
         
-    initialStopKey = stops.getGAEStopByModelId(timetable.initial[1].id).key
+    initialStopEntity = stops.getGAEStopByModelId(timetable.initial[1].id)
+    if initialStopEntity != None:
+        initialStopKey = initialStopEntity.key
+    else:
+        return None
     return GAETimetables(initstop=initialStopKey,
                          inittime=timetable.initial[0],
                          table=gaetable)
