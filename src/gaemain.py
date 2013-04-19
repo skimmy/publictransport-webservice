@@ -43,10 +43,17 @@ def test():
         outString += str(stops.getGAEStopByModelId(i))
     for k in keys:
         outString += str(k.get())
-#     gtt = timetables.getGAETimetable(modeltt)
+    gtt = timetables.getGAETimetable(modeltt)
+    gttKey = gtt.put()
 #     outString = None
 #     if gtt != None:
-#         outString = gtt.toTimetable().toXmlString() 
+#         outString = gtt.toTimetable().toXmlString()
+    from gaemodel import transits
+    generictransit = transits.GAETransit()
+    generictransit.ttable = gttKey
+    generictransit.put()
+     
+ 
     return(outString)
 
 

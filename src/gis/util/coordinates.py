@@ -8,11 +8,12 @@ Created on Apr 17, 2013
 # Author: Wayne Dyck
 
 import math
+import constants
 
 def distance(origin, destination):
     lat1, lon1 = origin
     lat2, lon2 = destination
-    radius = 6371 # km
+    radius = constants.EARTH_MEAN_RADIUS_METERS # meters
 
     dlat = math.radians(lat2-lat1)
     dlon = math.radians(lon2-lon1)

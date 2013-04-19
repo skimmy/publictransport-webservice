@@ -5,6 +5,7 @@ Created on Dec 6, 2012
 '''
 
 import base
+from gis.util import coordinates
 
 import xml.etree.ElementTree as ET
 
@@ -60,6 +61,12 @@ class GeoPosition(Position):
         d["latitude"] = str(self.latitude)
         d["longitude"] = str(self.longitude)
         return d
+    
+    def toList(self):
+        return [self.latitude, self.longitude]
+    
+    def distanceFrom(self, otherPos):
+        return coordinates.distance(self.toList(), otherPos.toList())
         
 class PositionedItem(base.ModelBase):
     
@@ -87,11 +94,13 @@ class PositionedItem(base.ModelBase):
         self.addInfoToElement(elem)
         return ET.tostring(elem)
         
-    
-    
 if __name__ == "__main__":
-    pos = GeoPosition(1.0, -3.0)
-    
+    pos = GeoPosition(0.0, 40.0)
+    pos2 = GeoPosition(1.0, 40.0)    
+    pos3 = GeoPosition(0.0, 41.0)
     pi = PositionedItem(pos,1234)
     print(pi.toDictionary())
     print(pi.toXmlString())
+    
+    print "Kilometers per lat degree   " + str(pos.distanceFrom(pos2) / 1000.0)
+    print "Kilometers per lon degree   " + str(pos.distanceFrom(pos3) / 1000.0)
