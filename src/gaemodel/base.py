@@ -9,11 +9,11 @@ from google.appengine.ext.ndb import polymodel
 
 from model import base
 
-def getGAEBaseModel(baseModel):
-    return GAEBaseModel(mid = baseModel.id)
-
-class GAEBaseModel(polymodel.PolyModel):
-    mid = ndb.StringProperty()
-    
-    def toBaseModel(self):
-        return base.ModelBase(str(self.mid))
+# def getGAEBaseModel(baseModel):
+#     return GAEBaseModel(mid = baseModel.id)
+# 
+# class GAEBaseModel(polymodel.PolyModel):
+#     mid = ndb.StringProperty()
+#     
+#     def toBaseModel(self):
+#         return base.ModelBase(str(self.mid))

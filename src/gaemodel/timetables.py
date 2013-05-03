@@ -6,7 +6,6 @@ Created on Apr 8, 2013
 
 import datetime
 
-from google.appengine.ext.ndb import polymodel
 from google.appengine.ext import ndb
 
 from gaemodel import stops
@@ -41,7 +40,7 @@ class TimetableItem(ndb.Model):
     time = ndb.IntegerProperty()
     stop = ndb.KeyProperty()
 
-class GAETimetables(polymodel.PolyModel):
+class GAETimetables(ndb.Model):
     inittime = ndb.TimeProperty()
     initstop = ndb.KeyProperty()
     table = ndb.StructuredProperty(TimetableItem, repeated=True)

@@ -5,9 +5,9 @@ Created on Apr 4, 2013
 '''
 
 from google.appengine.ext import ndb
+from google.appengine.ext.ndb import polymodel
 
 import model.position as posmodel
-from gaemodel.base import GAEBaseModel
 
 def getGAEGeoPositionedItem(item):
     return GAEGeoPositionedItem(position=ndb.GeoPt(lat = item.position.latitude,
@@ -16,7 +16,9 @@ def getGAEGeoPositionedItem(item):
                                 mid=item.id)
 
 
-class GAEGeoPositionedItem(GAEBaseModel):
+class GAEGeoPositionedItem(polymodel.PolyModel):
+    
+    mid = ndb.StringProperty()
     position = ndb.GeoPtProperty()
     # TODO: [DESIGN] Probably accuracy doesn't need to be indexed
     accuracy = ndb.FloatProperty(indexed=False)

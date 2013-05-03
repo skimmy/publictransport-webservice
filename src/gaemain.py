@@ -8,8 +8,6 @@ Created on Mar 26, 2013
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-
-
 def testCreateTimetable():
     from model.stops import Stop
     from gaemodel import stops
@@ -35,34 +33,26 @@ def testCreateTimetable():
     return tt, [kinS, ks, ps, ts], ["1200", "1234", "1235", "1202"]
 
 def test():
-    from gaemodel import timetables
-    from gaemodel import stops
-    modeltt, keys, ids = testCreateTimetable()
-    outString = ""
-    for i in ids:
-        outString += str(stops.getGAEStopByModelId(i))
-    for k in keys:
-        outString += str(k.get())
-    gtt = timetables.getGAETimetable(modeltt)
-    gttKey = gtt.put()
-#     outString = None
-#     if gtt != None:
-#         outString = gtt.toTimetable().toXmlString()
-    from gaemodel import transits
-    generictransit = transits.GAETransit()
-    generictransit.ttable = gttKey
-    generictransit.put()
-     
+    import google.appengine.ext.ndb as ndb
+    import gaemodel.position as gaepos
+    from gaemodel.position import GAEGeoPositionedItem
+    gaepos.GAEGeoPositionedItem(mid="a position", 
+                                position=ndb.GeoPt(lat="1.111", lon="44.44444"))
+#     user1 = gaeusr.GAEUser(name="skimmy", mid="usr:skimmy")
+#     user1.put()
+    
+    return ndb.gql("SELECT * FROM GAEGeoPositionedItem")
  
-    return(outString)
 
 
 class MainPage(webapp.RequestHandler):
 
     def get(self):
         ttable = test()
+        for q in ttable.fetch():
+            self.response.out.write(str(q) + "\n")
         self.response.headers['Content-Type'] = "text/plain"
-        self.response.out.write("Hello!\n")
+        self.response.out.write("\n\nHello!\n")
         self.response.out.write(str(ttable) + "\n")
      
 Application = webapp.WSGIApplication([('/', MainPage)], debug=True)
