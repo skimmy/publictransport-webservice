@@ -31,7 +31,7 @@ class GeoPosition(Position):
     
     DIGIT_PRECISION = 6 
     
-    def __init__(self, lat=0.0, lon=0.0):
+    def __init__(self, lat=0.0, lon=0.0, acc=0.0):
         '''
             The constructor initializes the position by giving its latitude and
             longitude. If no parameter is given, then the position is set to the
@@ -39,9 +39,11 @@ class GeoPosition(Position):
         '''
         self.latitude = lat
         self.longitude = lon
+        self.accuracy = acc
         
     def __repr__(self):
-        return ("(" + str(round(self.latitude, self.DIGIT_PRECISION)) + ", " + str(round(self.longitude, self.DIGIT_PRECISION)) + ")")
+        return ("(" + str(round(self.latitude, self.DIGIT_PRECISION)) + ", "
+                + str(round(self.longitude, self.DIGIT_PRECISION)) + ")")
         
     def getPosition(self):
         return (self.latitude, self.longitude)    

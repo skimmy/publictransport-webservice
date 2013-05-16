@@ -33,15 +33,13 @@ def testCreateTimetable():
     return tt, [kinS, ks, ps, ts], ["1200", "1234", "1235", "1202"]
 
 def test():
-    import google.appengine.ext.ndb as ndb
-    import gaemodel.position as gaepos
-    from gaemodel.position import GAEGeoPositionedItem
-    gaepos.GAEGeoPositionedItem(mid="a position", 
-                                position=ndb.GeoPt(lat="1.111", lon="44.44444"))
-#     user1 = gaeusr.GAEUser(name="skimmy", mid="usr:skimmy")
-#     user1.put()
-    
-    return ndb.gql("SELECT * FROM GAEGeoPositionedItem")
+    import model.position as mpos
+    import gaemodel.position as gpos
+    pos = mpos.GeoPosition(-30.0, 40.0)
+    pos2 = mpos.GeoPosition(1.0, 40.0)    
+    pos3 = mpos.GeoPosition(0.0, 41.0)
+    pi = mpos.PositionedItem(pos,1234)
+    return (gpos.getGAEGeoPositionedItem(pi))
  
 
 
@@ -49,8 +47,7 @@ class MainPage(webapp.RequestHandler):
 
     def get(self):
         ttable = test()
-        for q in ttable.fetch():
-            self.response.out.write(str(q) + "\n")
+        ttable.put()
         self.response.headers['Content-Type'] = "text/plain"
         self.response.out.write("\n\nHello!\n")
         self.response.out.write(str(ttable) + "\n")

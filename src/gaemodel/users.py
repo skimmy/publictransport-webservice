@@ -20,4 +20,8 @@ class GAEUserSession(ndb.Model):
 ##### USER CLASS #####
 
 class GAEUser(position.GAEGeoPositionedItem):
+    mid = ndb.StringProperty()
+    position = ndb.GeoPtProperty()
+#     accuracy = ndb.
     name = ndb.StringProperty()
+    
