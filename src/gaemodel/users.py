@@ -5,7 +5,6 @@ Created on Apr 8, 2013
 '''
 
 from google.appengine.ext import ndb
-from google.appengine.ext.ndb import polymodel
 
 import position
 
@@ -13,12 +12,16 @@ import position
 
 ###### USERSESSION CLASS ######
 
-class UserSession(polymodel.PolyModel):
+class GAEUserSession(ndb.Model):
     starttime = ndb.DateTimeProperty()
     timetable = ndb.KeyProperty()
     
     
 ##### USER CLASS #####
 
-class User(position.GAEGeoPositionedItem):
+class GAEUser(position.GAEGeoPositionedItem):
+    mid = ndb.StringProperty()
+    position = ndb.GeoPtProperty()
+#     accuracy = ndb.
     name = ndb.StringProperty()
+    
