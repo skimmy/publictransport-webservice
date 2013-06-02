@@ -4,11 +4,9 @@ Created on Mar 26, 2013
 @author: Michele Schimd
 '''
 
+from google.appengine.ext import endpoints
 
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp.util import run_wsgi_app
-
-
+from endpointsws.storews import StoreWS  
 
 def testCreateTimetable():
     from model.stops import Stop
@@ -56,20 +54,6 @@ def test():
  
     return(outString)
 
+epapp = endpoints.api_server([StoreWS])
 
-class MainPage(webapp.RequestHandler):
-
-    def get(self):
-        ttable = test()
-        self.response.headers['Content-Type'] = "text/plain"
-        self.response.out.write("Hello!\n")
-        self.response.out.write(str(ttable) + "\n")
-     
-Application = webapp.WSGIApplication([('/', MainPage)], debug=True)
-    
-def main():
-    run_wsgi_app(Application)
-    
-if __name__ == "__main__":
-    main()
     
