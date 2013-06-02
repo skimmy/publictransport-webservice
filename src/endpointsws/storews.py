@@ -39,9 +39,11 @@ class StoreWS(remote.Service):
                       http_method="POST")
     def storeGeoPositionedItem(self, request):
         from gaemodel.position import GAEGeoPositionedItem
-        from google.appengine.ext import ndb
-        gaePItem = GAEGeoPositionedItem(position=ndb.GeoPt(request.position.latitude, request.position.longitude),
-                                        accuracy=request.position.accuracy,
+        from gaemodel.position import GAEPosition
+        position = GAEPosition(lat=request.position.latitude,
+							   lon=request.position.longitude,
+								accuracy=request.position.accuracy)
+        gaePItem = GAEGeoPositionedItem(position=position,
                                         mid=request.itemId)
         storerId = gaePItem.put()
         return KeyReplyMessage(storerKey=str(storerId))
