@@ -7,21 +7,16 @@ Created on 31/mag/2013
 from google.appengine.ext import endpoints
 from protorpc import remote
 
-from messages import GreetingTestMessage
 from messages import GeoPointWithAccuracyMessage
+from messages import TimedPositionMessage
 from messages import ReplyInfoMessage
 from messages import PositionedItemMessage
-from messages import KeyReplyMessage
+
+import gaemodel.position as gpos
 
 @endpoints.api(name='ptstore', version='v1', 
                description='Store API for Public Transport Web Service')
 class StoreWS(remote.Service):
-    @endpoints.method(GreetingTestMessage,
-                      GreetingTestMessage,
-                      name="storeGreetings.greet", path='greet',
-                      http_method='POST')
-    def storeGreetings(self, request):
-        return request
 
     @endpoints.method(GeoPointWithAccuracyMessage,
                       ReplyInfoMessage,
@@ -34,17 +29,20 @@ class StoreWS(remote.Service):
         return ReplyInfoMessage(info=infoString)
     
     @endpoints.method(PositionedItemMessage,
-                      KeyReplyMessage,
+                      ReplyInfoMessage,
                       name="store_positioned_item", path="storepitem",
                       http_method="POST")
     def storeGeoPositionedItem(self, request):
-        from gaemodel.position import GAEGeoPositionedItem
-        from gaemodel.position import GAEPosition
-        position = GAEPosition(lat=request.position.latitude,
-							   lon=request.position.longitude,
-								accuracy=request.position.accuracy)
-        gaePItem = GAEGeoPositionedItem(position=position,
-                                        mid=request.itemId)
-        storerId = gaePItem.put()
-        return KeyReplyMessage(storerKey=str(storerId))
+        gaePItem = gpos.posItemMessageToGAEGeoPositionedItem(request)
+        gaePItem.put()
+        return ReplyInfoMessage(info="Stored")
+    
+    @endpoints.method(TimedPositionMessage,
+                      ReplyInfoMessage,
+                      name="store_timed_position", path="storetimedposition",
+                      http_method='POST')
+    def storeTimedPosition(self, request):
+        gtimed = gpos.timedPosMessageToGAETimedPosition(request)
+        gtimed.put()    
+        return ReplyInfoMessage(info="Stored")
     

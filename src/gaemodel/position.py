@@ -8,6 +8,7 @@ from google.appengine.ext import ndb
 from google.appengine.ext.ndb import polymodel
 
 import model.position as posmodel
+# import endpointsws.messages as messages
 
 ###### CONVERSION FUNCTIONS #####
 
@@ -17,6 +18,24 @@ def getGAEGeoPositionedItem(item):
                       accuracy = item.position.accuracy)
     return GAEGeoPositionedItem(position=pos,
                                 mid=item.id)
+    
+def posItemMessageToGAEGeoPositionedItem(msg):
+    pos = geoPointmessageToGAEPosition(msg.position)
+    itemId = msg.itemId
+    return GAEGeoPositionedItem(position=pos, mid=itemId)
+    
+def geoPointmessageToGAEPosition(msg):
+    return GAEPosition(lat=msg.latitude,
+                       lon=msg.longitude,
+                       accuracy=msg.accuracy)
+    
+def timedPosMessageToGAETimedPosition(msg):
+    import utility.timeutil as timeutil
+    pos = geoPointmessageToGAEPosition(msg.position)
+    tstamp= timeutil.stringToDatetime(msg.timestamp)[0]
+    return GAETimedPosition(position=pos,
+                            timestamp=tstamp)
+
     
 ###### GAE POSITION CLASS #####
    
@@ -38,5 +57,10 @@ class GAEGeoPositionedItem(polymodel.PolyModel):
                                                          acc = self.position.accuracy),
                                                          self.mid)
         p.setAccuracy(self.accuracy)
-        return p        
+        return p
+    
+##### GAE TIMED ITEM CLASS #####
+class GAETimedPosition(ndb.Model):
+    position = ndb.StructuredProperty(GAEPosition)
+    timestamp = ndb.DateTimeProperty()   
 

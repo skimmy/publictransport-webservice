@@ -6,9 +6,6 @@ Created on 31/mag/2013
 
 from protorpc import messages
 
-class GreetingTestMessage(messages.Message):
-    greet = messages.StringField(1, required=True)
-    
 class GeoPointWithAccuracyMessage(messages.Message):
     latitude = messages.FloatField(1, required=True)
     longitude = messages.FloatField(2, required=True)
@@ -18,9 +15,13 @@ class PositionedItemMessage(messages.Message):
     itemId = messages.StringField(1, required=True)
     position = messages.MessageField(GeoPointWithAccuracyMessage, 2, required=True)
     
+class TimedPositionMessage(messages.Message):
+    position = messages.MessageField(GeoPointWithAccuracyMessage, 1, required=True)
+    timestamp = messages.StringField(2, required=True)
+    
     
 class RouteMessage(messages.Message):
-    positions = messages.MessageField(GeoPointWithAccuracyMessage, 1, 
+    positions = messages.MessageField(TimedPositionMessage, 1, 
                                       repeated=True)
     
 class KeyReplyMessage(messages.Message):
