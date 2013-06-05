@@ -11,8 +11,10 @@ from messages import GeoPointWithAccuracyMessage
 from messages import TimedPositionMessage
 from messages import ReplyInfoMessage
 from messages import PositionedItemMessage
+from messages import RouteMessage
 
 import gaemodel.position as gpos
+import gaemodel.route as groute
 
 @endpoints.api(name='ptstore', version='v1', 
                description='Store API for Public Transport Web Service')
@@ -45,4 +47,13 @@ class StoreWS(remote.Service):
         gtimed = gpos.timedPosMessageToGAETimedPosition(request)
         gtimed.put()    
         return ReplyInfoMessage(info="Stored")
+    
+    @endpoints.method(RouteMessage,
+                      ReplyInfoMessage,
+                      name="store_route", path="storeroute",
+                      http_method='POST')
+    def storeRoute(self, request):
+        gaeRoute = groute.routeMessageToGAERoute(request)
+        gaeRoute.put()
+        return ReplyInfoMessage(info="Route stored!")
     
