@@ -20,18 +20,18 @@ def getGAEGeoPositionedItem(item):
                                 mid=item.id)
     
 def posItemMessageToGAEGeoPositionedItem(msg):
-    pos = geoPointmessageToGAEPosition(msg.position)
+    pos = geoPointMessageToGAEPosition(msg.position)
     itemId = msg.itemId
     return GAEGeoPositionedItem(position=pos, mid=itemId)
     
-def geoPointmessageToGAEPosition(msg):
+def geoPointMessageToGAEPosition(msg):
     return GAEPosition(lat=msg.latitude,
                        lon=msg.longitude,
                        accuracy=msg.accuracy)
     
 def timedPosMessageToGAETimedPosition(msg):
     import utility.timeutil as timeutil
-    pos = geoPointmessageToGAEPosition(msg.position)
+    pos = geoPointMessageToGAEPosition(msg.position)
     tstamp= timeutil.stringToDatetime(msg.timestamp)[0]
     return GAETimedPosition(position=pos,
                             timestamp=tstamp)
