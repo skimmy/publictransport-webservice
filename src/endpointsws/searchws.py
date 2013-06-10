@@ -7,9 +7,8 @@ Created on 08/giu/2013
 from google.appengine.ext import endpoints
 from google.appengine.api import search
 
-from docsearch import documents
 from docsearch import query
-from gaemodel import position
+from docsearch import dochelper
 
 from endpointsws.messages import NeighbourSearchMessage
 from endpointsws.messages import ReplyInfoMessage
@@ -26,16 +25,5 @@ class SearchWS:
         query = query.getNeghborhoodStringQuery(request.position.latitude,
                                                 request.position.longitude,
                                                 request.radius, 'position')
-        index = search.Index(documents.POSITIONED_ITEM_INDEX)
+        index = search.Index(dochelper.POSITIONED_ITEM_INDEX)
         results = index.search("pippo")
-#         results = index.search(query)
-        
-        s = ""
-        for r in results:
-            s += str(r)
-#         pos = position.geoPointMessageToGAEPosition(request.position)
-#         itemId= "DefaultId"
-#         gaePosItem = position.GAEGeoPositionedItem(position=pos,
-#                                                    mid=itemId)
-#         documents.createPositionedItemDocument(gaePosItem, itemStorerId)
-                                                   
