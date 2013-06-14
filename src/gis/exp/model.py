@@ -5,6 +5,7 @@ Created on Jun 10, 2013
 '''
 
 import utility.timeutil as tutil
+import gis.util.coordinates as coord
 import datetime
 
 class LoggedPosition:
@@ -23,8 +24,8 @@ class LoggedPosition:
     def fromLogLine(self, line):
         logList = line.split()
         timeString = logList[0] + ' ' + logList[1]
-        self.timestamp = tutil.stringToDatetime(timeString)[0]        
-        self.latitute = float(logList[2])
+        self.timestamp = tutil.stringToDatetime(timeString)[1]        
+        self.latitude = float(logList[2])
         self.longitude = float(logList[3])
         self.accuracy = float(logList[4])
         self.provider = logList[5]
@@ -33,11 +34,17 @@ class LoggedPosition:
         self.speed = logList[8]        
         
     def secondsSince(self, previous):
-        return (self.timestamp - previous.timestamp).seconds        
+        return (self.timestamp - previous.timestamp).total_seconds()      
+    
+    def distanceFrom(self, other):
+        return coord.distance((self.latitude, self.longitude), (other.latitude, other.longitude))
+    
+    def distanceWithAccuracyFrom(self, other):
+        return self.distanceFrom(other) - (float(self.accuracy + other.accuracy) / 2.0)
         
     def __str__(self):        
         s =  "--- " + str(self.timestamp) + " ---\n"
-        s += "(" + str(self.latitute) + "," + str(self.longitude) + ") - " + str(self.accuracy)
+        s += "(" + str(self.latitude) + "," + str(self.longitude) + ") - " + str(self.accuracy)
         s += "\n[" + self.provider + "]"
         return s 
 

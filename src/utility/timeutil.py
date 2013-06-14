@@ -23,6 +23,10 @@ def stringToDatetime(strTimestamp):
         dtObjMsecs = dtObj.replace(microsecond = (1000 * int(msecsStr)))
     return dtObj, dtObjMsecs
 
+def timeDeltaToFloatSecs(tDelta):
+    return tDelta.total_seconds()
+
 if __name__ == "__main__":
-#     print stringToDatetime("2013-05-25 13:16:47.556")
-    print stringToDatetime("2013-05-25 13:16:47")
+    x,xx = stringToDatetime("2013-05-25 13:16:47.556")
+    y,yy = stringToDatetime("2013-05-25 13:16:47")
+    print float(timeDeltaToFloatSecs(xx-yy))
