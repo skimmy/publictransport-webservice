@@ -12,6 +12,10 @@ NO_ERROR = 0
 
 ##### DEFINITION OF MESSAGES #####
 
+class ReplyInfoMessage(messages.Message):
+    info = messages.StringField(1, required=True)
+    errorCode = messages.IntegerField(2)
+
 class GeoPointWithAccuracyMessage(messages.Message):
     """The base position message. Positions are define by latitude
     longitude and an optional accuracy as floats"""
@@ -33,6 +37,10 @@ class PositionedItemMessage(messages.Message):
     # This is a list of identifier for pictures
     pictures = messages.StringField(5, repeated=True)
     
+class PositionedItemListMessage(messages.Message):
+    items = messages.MessageField(PositionedItemMessage, 1, repeated=True)
+    infoMessage = messages.MessageField(ReplyInfoMessage, 2)
+    
 class TimedPositionMessage(messages.Message):
     position = messages.MessageField(GeoPointWithAccuracyMessage, 1, required=True)
     timestamp = messages.StringField(2, required=True)
@@ -45,7 +53,11 @@ class NeighbourSearchMessage(messages.Message):
                                      required=True)
     radius = messages.FloatField(2,required=True) 
     
-class ReplyInfoMessage(messages.Message):
-    info = messages.StringField(1, required=True)
-    errorCode = messages.IntegerField(2)
+##### CONVERSION FUNCTIONS #####
+def gaePosItemToPosItemMessage(gpos):
+    lat = gpos.position.lat
+    lon = gpos.position.lon
+    mid = gpos.mid
+    pos = GeoPointWithAccuracyMessage(latitude=lat, longitude=lon)
+    return PositionedItemMessage(itemId=mid, position=pos)
     

@@ -6,7 +6,8 @@ Created on Mar 26, 2013
 
 from google.appengine.ext import endpoints
 
-from endpointsws.storews import StoreWS  
+from endpointsws.storews import StoreWS
+from endpointsws.testws import TestAPI  
 
 def testCreateTimetable():
     from model.stops import Stop
@@ -54,6 +55,6 @@ def test():
  
     return(outString)
 
-epapp = endpoints.api_server([StoreWS])
+epapp = endpoints.api_server([StoreWS, TestAPI])
 
     

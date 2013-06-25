@@ -11,6 +11,9 @@ from google.appengine.ext.ndb import Key
 
 POSITIONED_ITEM_INDEX="positioned_item"
 
+POSITION_FIELD_NAME="position"
+DATASTOREKEY_FIELD_NAME = "id"
+
 #### UTILITY FUNCTIONS #####
 
 def storerKeyToDocumentId(storerKey):
@@ -28,3 +31,10 @@ def storeDocumentOnIndex(doc, idx):
 def execQueryStringOnIndex(query, idxName):
     index = search.Index(idxName)
     return index.search(query)
+
+##### "STANDARD" QUERIES #####
+
+def getDocumentsForProximitySerch(lat, lon, distance, indexName):
+    fieldName = POSITION_FIELD_NAME
+    query = "distance(%s, geopoint(%f,%f)) < %d" % (fieldName, lat, lon, distance)
+    return execQueryStringOnIndex(query, indexName)
